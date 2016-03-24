@@ -144,9 +144,13 @@ public class CrateClient
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String columnName = resultSet.getString("column_name");
-                Type columnType = toPrestoType(resultSet.getString("data_type"));
+                String crateType = resultSet.getString("data_type");
+                Type columnType = toPrestoType(crateType);
                 if (columnType != null) {
-                   columns.add(new JdbcColumnHandle(connectorId, columnName, columnType));
+                    columns.add(new JdbcColumnHandle(connectorId, columnName, columnType));
+                    if (crateType.endsWith("_array")) {
+                        columns.add(new JdbcColumnHandle(connectorId, String.format("ANY(%s)", columnName), columnType));
+                    }
                 }
             }
 
