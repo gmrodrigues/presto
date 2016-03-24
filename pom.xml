@@ -83,6 +83,7 @@
         <module>presto-base-jdbc</module>
         <module>presto-mysql</module>
         <module>presto-postgresql</module>
+        <module>presto-crate</module>
         <module>presto-bytecode</module>
         <module>presto-client</module>
         <module>presto-parser</module>
@@ -169,6 +170,12 @@
             <dependency>
                 <groupId>com.facebook.presto</groupId>
                 <artifactId>presto-mysql</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.facebook.presto</groupId>
+                <artifactId>presto-crate</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
