@@ -11,18 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.facebook.presto.execution.scheduler;
+package com.facebook.presto;
 
-import com.facebook.presto.execution.SqlStageExecution;
+import com.facebook.presto.spi.PrestoException;
+import io.airlift.units.Duration;
 
-import java.util.Collection;
+import static com.facebook.presto.spi.StandardErrorCode.EXCEEDED_CPU_LIMIT;
 
-public class AllAtOnceExecutionPolicy
-        implements ExecutionPolicy
+public class ExceededCpuLimitException
+        extends PrestoException
 {
-    @Override
-    public ExecutionSchedule createExecutionSchedule(Collection<SqlStageExecution> stages)
+    public ExceededCpuLimitException(Duration duration)
     {
-        return new AllAtOnceExecutionSchedule(stages);
+        super(EXCEEDED_CPU_LIMIT, "Exceeded CPU limit of " + duration.toString());
     }
 }
