@@ -78,17 +78,6 @@ public class CrateClient
     }
 
     @Override
-    public Statement getStatement(Connection connection)
-            throws SQLException
-    {
-        Statement statement = connection.createStatement();
-//        if (statement.isWrapperFor(io.crate.client.jdbc.CrateStatement.class)) {
-//            statement.unwrap(io.crate.client.jdbc.CrateStatement.class).;
-//        }
-        return statement;
-    }
-
-    @Override
     protected ResultSet getTables(Connection connection, String schemaName, String tableName)
             throws SQLException
     {
@@ -146,12 +135,7 @@ public class CrateClient
                 String columnName = resultSet.getString("column_name");
                 String crateType = resultSet.getString("data_type");
                 Type columnType = toPrestoType(crateType);
-                if (columnType != null) {
-                    columns.add(new JdbcColumnHandle(connectorId, columnName, columnType));
-                    if (crateType.endsWith("_array")) {
-                        columns.add(new JdbcColumnHandle(connectorId, String.format("ANY(%s)", columnName), columnType));
-                    }
-                }
+                columns.add(new JdbcColumnHandle(connectorId, columnName, columnType));
             }
 
             return ImmutableList.copyOf(columns);
@@ -168,14 +152,11 @@ public class CrateClient
                 return BOOLEAN;
             case "integer":
             case "long":
+            case "timestamp":
                 return BIGINT;
             case "float":
             case "double":
                 return DOUBLE;
-            case "string":
-                return VARCHAR;
-            case "timestamp":
-                return BIGINT;
         }
         return VARCHAR;
     }
